@@ -1,0 +1,23 @@
+.one-loader {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(@black, .2);
+  z-index: 100000;
+  
+  .one-loader-spin {
+    position: absolute;
+    display: block;
+    height: 60px;
+    width: 200px;
+    left: calc(50% - 100px);
+    top: calc(48% - 30px);
+  }
+}
+
+.one-loader.hidden {
+  display: none;
+}

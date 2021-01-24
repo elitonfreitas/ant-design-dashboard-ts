@@ -1,5 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const CracoLessPlugin = require('craco-less');
+const { getThemeVariables } = require('antd/dist/theme');
+
+const modifyVariables = getThemeVariables({
+  dark: false,
+});
+modifyVariables['@primary-color'] = '#7d1ae5';
+modifyVariables['@form-vertical-label-padding'] = '0 0 4px';
 
 module.exports = {
   plugins: [
@@ -8,7 +14,7 @@ module.exports = {
       options: {
         lessLoaderOptions: {
           lessOptions: {
-            modifyVars: { '@primary-color': '#1DA57A' },
+            modifyVars: modifyVariables,
             javascriptEnabled: true,
           },
         },

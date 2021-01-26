@@ -11,6 +11,7 @@ export interface Theme {
   t(key: string): string;
   changeTheme(theme: AppTheme, componentSize: ComponentSize): void;
   changeLang(theme: Lang): void;
+  changeLogged(logged: boolean): void;
 }
 
 const AppContext = React.createContext<Theme>({
@@ -20,6 +21,7 @@ const AppContext = React.createContext<Theme>({
   t: () => '',
   changeTheme: () => {},
   changeLang: () => {},
+  changeLogged: () => {},
 });
 
 export default AppContext;

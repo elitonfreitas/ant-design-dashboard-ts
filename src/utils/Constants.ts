@@ -6,6 +6,7 @@ const Constants = {
     TOKEN: 'ANT-DASHBOARD-TOKEN',
     LANG: 'ANT-DASHBOARD-LANG',
     LOGGED: 'ANT-DASHBOARD-LOGGED',
+    USER: 'ANT-DASHBOARD-USER',
   },
   api: {
     AUTH: 'auth',
@@ -14,6 +15,14 @@ const Constants = {
   },
   message: {
     INVALID_TOKEN: 'Invalid token',
+  },
+  acl: {
+    users: 'users',
+  },
+  permissions: {
+    R: 'r',
+    W: 'w',
+    M: 'm',
   },
 };
 

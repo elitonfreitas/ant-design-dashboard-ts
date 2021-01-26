@@ -1,18 +1,24 @@
-.avatar {
+.profile {
   position: absolute;
-  right: 22px;
+  right: 92px;
   top: 0px;
-  .avatar-thumb {
+  text-align: right;
+  width: 250px;
+  display: inline-block;
+
+  .profile-thumb {
     color: @primary-color;
     background-color: rgba(@primary-color, 0.2);
     margin-top: -5px;
   }
+
   h2 {
     position: absolute;
     right: 50px;
     margin-top: -5px;
     font-size: 20px;
   }
+
   p {
     position: absolute;
     right: 50px;
@@ -20,4 +26,10 @@
     font-size: 11px;
     color: @primary-color;
   }
+}
+
+.profile-logout {
+  position: absolute;
+  display: inline-block;
+  right: 12px;
 }

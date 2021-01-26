@@ -6,6 +6,7 @@ import { formatDate } from 'utils/DateUtils';
 import AppContext from 'contexts/AppContext';
 import UserCreate from 'pages/User/Create';
 import defaultService from 'services/defaultService';
+import { checkACL } from 'utils/AclUtils';
 import Constants from 'utils/Constants';
 import './style.less';
 
@@ -89,20 +90,25 @@ const UserList: FC = (): JSX.Element => {
               </Form.Item>
             </Form>
           </Col>
-          <Col span={4} style={{ textAlign: 'right' }}>
-            <Button
-              icon={<PlusOutlined />}
-              type="primary"
-              onClick={() => {
-                setUserEdit(undefined);
-                setCreateVisible(true);
-              }}
-            >
-              {t('New user')}
-            </Button>
-          </Col>
+          {checkACL(Constants.acl.users, Constants.permissions.W) ? (
+            <Col span={4} style={{ textAlign: 'right' }}>
+              <Button
+                icon={<PlusOutlined />}
+                type="primary"
+                onClick={() => {
+                  setUserEdit(undefined);
+                  setCreateVisible(true);
+                }}
+              >
+                {t('New user')}
+              </Button>
+            </Col>
+          ) : (
+            ''
+          )}
         </Row>
       </Content>
+
       <Content className="one-page-user-list">
         <Table
           loading={loading}
@@ -143,24 +149,26 @@ const UserList: FC = (): JSX.Element => {
             width={90}
             render={(_: string, item: User) => formatDate(item.updatedAt)}
           />
-          <Column
-            title={t('Edit')}
-            dataIndex={'edit'}
-            width={50}
-            fixed={'right'}
-            align={'center'}
-            render={(_: string, item: User) => (
-              <Button
-                onClick={() => {
-                  setCreateVisible(true);
-                  setUserEdit(item);
-                }}
-                icon={<EditOutlined />}
-                type="primary"
-                shape="circle"
-              ></Button>
-            )}
-          />
+          {checkACL(Constants.acl.users, Constants.permissions.W) ? (
+            <Column
+              title={t('Edit')}
+              dataIndex={'edit'}
+              width={50}
+              fixed={'right'}
+              align={'center'}
+              render={(_: string, item: User) => (
+                <Button
+                  onClick={() => {
+                    setCreateVisible(true);
+                    setUserEdit(item);
+                  }}
+                  icon={<EditOutlined />}
+                  type="primary"
+                  shape="circle"
+                ></Button>
+              )}
+            />
+          ) : null}
         </Table>
       </Content>
 

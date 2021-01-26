@@ -61,12 +61,7 @@ const OneSiderBar: FC = (): JSX.Element => {
             onClick={toggle}
           />
 
-          <OneProfile
-            name="Teste"
-            profile="Administrador"
-            onClick={() => setCollapsedRight(!collapsedRight)}
-            image={logo}
-          />
+          <OneProfile onClick={() => setCollapsedRight(!collapsedRight)} />
         </Header>
         <Routes collapsed={collapsed} menus={menus} />
         <Footer

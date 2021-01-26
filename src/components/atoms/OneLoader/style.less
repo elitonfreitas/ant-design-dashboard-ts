@@ -7,14 +7,22 @@
   height: 100vh;
   background: rgba(@black, .2);
   z-index: 100000;
-  
-  .one-loader-spin {
-    position: absolute;
-    display: block;
-    height: 60px;
-    width: 200px;
-    left: calc(50% - 100px);
-    top: calc(48% - 30px);
+
+  // .one-loader-spin {
+  //   position: absolute !important;
+  //   display: block !important;
+  //   height: 60px !important;
+  //   width: 200px !important;
+  //   left: calc(50% - 100px) !important;
+  //   top: calc(48% - 30px) !important;
+  // }
+
+  .ant-spin-nested-loading {
+    display: contents;
+
+    .ant-spin-container {
+      display: none;
+    }
   }
 }
 

@@ -35,7 +35,9 @@ const App: FC = () => {
   return (
     <ConfigProvider locale={antLang[lang]} componentSize={componentSize}>
       <BrowserRouter>
-        <AppContext.Provider value={{ theme, componentSize, lang, t, changeTheme, changeLang }}>
+        <AppContext.Provider
+          value={{ theme, componentSize, lang, t, changeTheme, changeLang, changeLogged: changeLogin }}
+        >
           {logged ? <OneSiderBar /> : <OneLogin onLogin={changeLogin} />}
         </AppContext.Provider>
       </BrowserRouter>

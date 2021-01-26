@@ -1,8 +1,10 @@
 import { FC, ReactElement, useContext } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Layout } from 'antd';
-import { MenuItem } from './menu';
 import OnePageHeader from '../components/atoms/OnePageHeader';
+import { checkACL } from 'utils/AclUtils';
+import Constants from 'utils/Constants';
+import { MenuItem } from './menu';
 import AppContext from 'contexts/AppContext';
 
 const { Content } = Layout;
@@ -25,35 +27,42 @@ const Routes: FC<RoutesProps> = ({ collapsed, menus }: RoutesProps): ReactElemen
     ];
     const path = routesList.map((it) => it.path).join('');
 
-    if (item.component) {
-      const Component: React.ElementType = item.component;
-      return (
-        <Route
-          key={i}
-          path={path}
-          exact={!!item.exact}
-          component={() => (
-            <Content
-              className="one-layout-content"
-              style={{
-                marginTop: 90,
-                marginLeft: collapsed ? 104 : 274,
-              }}
-            >
-              {!item.noHeader && <OnePageHeader title={t(item.title || '')} subTitle={t(item.subTitle || '')} />}
-              <Component />
-            </Content>
-          )}
-        />
-      );
-    }
-    if (item.children) {
-      return item.children.map((child, s) => mapMenu(child, `${i}-${s}`, routesList));
+    if (!item.aclResource || checkACL(item.aclResource, Constants.permissions.R)) {
+      if (item.component) {
+        const Component: React.ElementType = item.component;
+        return (
+          <Route
+            key={i}
+            path={path}
+            exact={!!item.exact}
+            component={() => (
+              <Content
+                className="one-layout-content"
+                style={{
+                  marginTop: 90,
+                  marginLeft: collapsed ? 104 : 274,
+                }}
+              >
+                {!item.noHeader && <OnePageHeader title={t(item.title || '')} subTitle={t(item.subTitle || '')} />}
+                <Component />
+              </Content>
+            )}
+          />
+        );
+      }
+      if (item.children) {
+        return item.children.map((child, s) => mapMenu(child, `${i}-${s}`, routesList));
+      }
     }
     return null;
   }
 
-  return <Switch>{menus.map((item: MenuItem, i: number) => mapMenu(item, `${i}`, []))}</Switch>;
+  return (
+    <Switch>
+      {menus.map((item: MenuItem, i: number) => mapMenu(item, `${i}`, []))}
+      <Redirect to="/" />
+    </Switch>
+  );
 };
 
 export default Routes;

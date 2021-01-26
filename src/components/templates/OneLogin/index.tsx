@@ -3,6 +3,7 @@ import { Button, Checkbox, Form, Image, Input, Typography } from 'antd';
 import defaultService from 'services/defaultService';
 import AppContext from 'contexts/AppContext';
 import Constants from 'utils/Constants';
+import { tokenDecode } from 'utils/AclUtils';
 import logo from 'assets/logo.svg';
 import './style.less';
 
@@ -21,6 +22,8 @@ const OneLogin: FC<LoginProps> = ({ onLogin }: LoginProps): ReactElement => {
     } else {
       console.log(response);
       localStorage.setItem(Constants.storage.TOKEN, response.token);
+      const decoded = tokenDecode(response.token);
+      localStorage.setItem(Constants.storage.USER, JSON.stringify(decoded.user));
       onLogin(true);
     }
   };

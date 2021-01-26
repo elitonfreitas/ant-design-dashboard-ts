@@ -13,6 +13,7 @@ export interface MenuItem {
   children?: MenuItem[];
   exact?: boolean;
   noHeader?: boolean;
+  aclResource?: string;
 }
 
 const menus: MenuItem[] = [
@@ -30,6 +31,7 @@ const menus: MenuItem[] = [
     icon: ProjectOutlined,
     component: UserList,
     exact: true,
+    aclResource: 'users',
   },
   // {
   //   path: '/projects',

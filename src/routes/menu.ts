@@ -1,7 +1,7 @@
 import { ElementType } from 'react';
 import { UserOutlined, ProjectOutlined } from '@ant-design/icons';
 import Dashboard from '../pages/Dashboard';
-import ArticleList from 'pages/Article/List';
+import UserList from 'pages/User/List';
 
 export interface MenuItem {
   path: string;
@@ -24,11 +24,11 @@ const menus: MenuItem[] = [
     icon: UserOutlined,
   },
   {
-    path: '/articles',
-    title: 'Articles',
+    path: '/users',
+    title: 'Users',
     subTitle: 'Texto de teste para subtílulo da página',
     icon: ProjectOutlined,
-    component: ArticleList,
+    component: UserList,
     exact: true,
   },
   // {

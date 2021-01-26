@@ -3,11 +3,17 @@ const Constants = {
     appName: process.env.REACT_APP_NAME || 'Ant Admin',
   },
   storage: {
-    TOKEN: 'ONE-STUDIO-TOKEN',
+    TOKEN: 'ANT-DASHBOARD-TOKEN',
+    LANG: 'ANT-DASHBOARD-LANG',
+    LOGGED: 'ANT-DASHBOARD-LOGGED',
   },
   api: {
-    ARTICLES: 'articles',
-    SELECT: 'select',
+    AUTH: 'auth',
+    USERS: 'users',
+    PROFILES: 'profiles',
+  },
+  message: {
+    INVALID_TOKEN: 'Invalid token',
   },
 };
 

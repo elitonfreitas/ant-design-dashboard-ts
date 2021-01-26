@@ -1,15 +1,28 @@
 import { FC, ReactElement, useContext } from 'react';
 import { Button, Checkbox, Form, Image, Input, Typography } from 'antd';
+import defaultService from 'services/defaultService';
 import AppContext from 'contexts/AppContext';
 import Constants from 'utils/Constants';
 import logo from 'assets/logo.svg';
 import './style.less';
 
-const OneLogin: FC = (): ReactElement => {
+interface LoginProps {
+  onLogin(logged: boolean): void;
+}
+
+const OneLogin: FC<LoginProps> = ({ onLogin }: LoginProps): ReactElement => {
   const { t } = useContext(AppContext);
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const onFinish = async (values: any) => {
+    const response = await defaultService.post(Constants.api.AUTH, values);
+
+    if (response.error) {
+      console.log(response);
+    } else {
+      console.log(response);
+      localStorage.setItem(Constants.storage.TOKEN, response.token);
+      onLogin(true);
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -33,8 +46,8 @@ const OneLogin: FC = (): ReactElement => {
 
         <Form.Item
           label={t('Username')}
-          name="username"
-          rules={[{ required: true, message: t('Please input your username!') }]}
+          name="email"
+          rules={[{ required: true, message: t('Please input your email!') }]}
         >
           <Input />
         </Form.Item>

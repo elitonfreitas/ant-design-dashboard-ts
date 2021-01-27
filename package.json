@@ -24,8 +24,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "start": "NODE_ENV=development craco start",
+    "build": "NODE_ENV=production craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
@@ -54,6 +54,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
+    "craco-antd": "^1.19.0",
     "craco-less": "^1.17.1",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.1.0",
@@ -68,6 +69,7 @@
     "react-scripts": "4.0.1",
     "terser-webpack-plugin": "^5.1.1",
     "typescript": "^4.0.3",
-    "uglifyjs-webpack-plugin": "^2.2.0"
+    "webpack-bundle-analyzer": "^4.4.0",
+    "webpackbar": "^5.0.0-3"
   }
 }

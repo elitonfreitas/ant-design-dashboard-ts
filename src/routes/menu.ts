@@ -1,5 +1,6 @@
 import { ElementType } from 'react';
-import { UserOutlined, ProjectOutlined } from '@ant-design/icons';
+import UserOutlined from '@ant-design/icons/UserOutlined';
+import ProjectOutlined from '@ant-design/icons/ProjectOutlined';
 import Dashboard from '../pages/Dashboard';
 import UserList from 'pages/User/List';
 

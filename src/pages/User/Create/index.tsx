@@ -6,7 +6,7 @@ import Input from 'antd/es/input';
 import Modal from 'antd/es/modal';
 import Row from 'antd/es/row';
 import Typography from 'antd/es/typography';
-import { ProjectOutlined } from '@ant-design/icons';
+import ProjectOutlined from '@ant-design/icons/ProjectOutlined';
 import OneLoader from 'components/atoms/OneLoader';
 import OneSelect from 'components/atoms/OneSelect';
 import AppContext from 'contexts/AppContext';

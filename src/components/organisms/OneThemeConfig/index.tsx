@@ -1,5 +1,9 @@
 import { FC, useContext } from 'react';
-import { Form, Layout, Radio, Select, Typography } from 'antd';
+import Form from 'antd/es/form';
+import Layout from 'antd/es/layout';
+import Radio from 'antd/es/radio';
+import Select from 'antd/es/select';
+import Typography from 'antd/es/typography';
 import AppContext from 'contexts/AppContext';
 import { Lang } from 'i18n';
 import './style.less';

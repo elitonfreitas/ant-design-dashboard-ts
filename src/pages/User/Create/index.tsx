@@ -1,5 +1,11 @@
 import { FC, ReactElement, useContext, useEffect, useState } from 'react';
-import { Alert, Col, Form, Input, Modal, Row, Typography } from 'antd';
+import Alert from 'antd/es/alert';
+import Col from 'antd/es/col';
+import Form from 'antd/es/form';
+import Input from 'antd/es/input';
+import Modal from 'antd/es/modal';
+import Row from 'antd/es/row';
+import Typography from 'antd/es/typography';
 import { ProjectOutlined } from '@ant-design/icons';
 import OneLoader from 'components/atoms/OneLoader';
 import OneSelect from 'components/atoms/OneSelect';

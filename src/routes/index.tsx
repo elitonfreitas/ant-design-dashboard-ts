@@ -1,6 +1,6 @@
 import { FC, ReactElement, useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Layout } from 'antd';
+import Layout from 'antd/es/layout';
 import OnePageHeader from '../components/atoms/OnePageHeader';
 import { checkACL } from 'utils/AclUtils';
 import Constants from 'utils/Constants';

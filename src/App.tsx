@@ -1,16 +1,17 @@
 import { FC, useState } from 'react';
-import { ConfigProvider } from 'antd';
+import ConfigProvider from 'antd/es/config-provider';
 import { BrowserRouter } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AppContext, { AppTheme, ComponentSize } from 'contexts/AppContext';
 import OneSiderBar from 'components/templates/OneSiderBar';
 import OneLogin from 'components/templates/OneLogin';
+import { sls } from 'utils/StorageUtils';
 import i18n, { antLang, Lang } from './i18n';
 import Constants from 'utils/Constants';
 import 'themes/default.less';
 
 const App: FC = () => {
-  const [logged, setLogged] = useState(Boolean(JSON.parse(localStorage.getItem(Constants.storage.LOGGED) || 'false')));
+  const [logged, setLogged] = useState(Boolean(JSON.parse(sls.getItem(Constants.storage.LOGGED) || 'false')));
   const [theme, setTheme] = useState<AppTheme>('light');
   const [lang, setLang] = useState<Lang>('pt_br');
   const [componentSize, setComponentSize] = useState<ComponentSize>('middle');
@@ -23,12 +24,12 @@ const App: FC = () => {
 
   function changeLogin(_logged: boolean) {
     setLogged(_logged);
-    localStorage.setItem(Constants.storage.LOGGED, `${_logged}`);
+    sls.setItem(Constants.storage.LOGGED, `${_logged}`);
   }
 
   async function changeLang(_lang: Lang) {
     setLang(_lang);
-    localStorage.setItem(Constants.storage.LANG, _lang.replaceAll('_', '-'));
+    sls.setItem(Constants.storage.LANG, _lang.replaceAll('_', '-'));
     await i18n.changeLanguage(_lang);
   }
 

@@ -1,5 +1,13 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import { Button, Form, Layout, Input, Switch, Table, Tooltip, Row, Col } from 'antd';
+import Button from 'antd/es/button';
+import Col from 'antd/es/col';
+import Form from 'antd/es/form';
+import Input from 'antd/es/input';
+import Layout from 'antd/es/layout';
+import Switch from 'antd/es/switch';
+import Table from 'antd/es/table';
+import Tooltip from 'antd/es/tooltip';
+import Row from 'antd/es/row';
 import { EditOutlined, SearchOutlined, PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Profile, User } from 'interfaces';
 import { formatDate } from 'utils/DateUtils';

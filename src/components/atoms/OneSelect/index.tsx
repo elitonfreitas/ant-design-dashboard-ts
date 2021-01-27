@@ -1,8 +1,8 @@
 import { FC, ReactElement, useContext, useEffect, useState } from 'react';
-import { Select } from 'antd';
-import { SelectProps, SelectValue } from 'antd/lib/select/index';
+import Select, { SelectProps, SelectValue } from 'antd/es/select';
 import AppContext from 'contexts/AppContext';
 import defaultService from 'services/defaultService';
+import { sls } from 'utils/StorageUtils';
 
 const { Option } = Select;
 
@@ -23,11 +23,11 @@ const OneSelect: FC<OneSelectProps> = (props: OneSelectProps): ReactElement => {
   const [data, setData] = useState<any[]>([]);
 
   const setCache = (data: any[]) => {
-    localStorage.setItem(apiURL, JSON.stringify(data));
+    sls.setItem(apiURL, JSON.stringify(data));
   };
 
   const getCache = () => {
-    const cacheData = localStorage.getItem(apiURL) || 'false';
+    const cacheData = sls.getItem(apiURL) || 'false';
     return JSON.parse(cacheData);
   };
 

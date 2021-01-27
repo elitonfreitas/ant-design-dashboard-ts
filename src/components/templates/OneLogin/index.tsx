@@ -1,9 +1,17 @@
 import { FC, ReactElement, useContext, useState } from 'react';
-import { Alert, Button, Checkbox, Col, Form, Image, Input, Typography } from 'antd';
+import Form from 'antd/es/form';
+import Alert from 'antd/es/alert';
+import Button from 'antd/es/button';
+import Checkbox from 'antd/es/checkbox';
+import Typography from 'antd/es/typography';
+import Col from 'antd/es/col';
+import Image from 'antd/es/image';
+import Input from 'antd/es/input';
 import defaultService from 'services/defaultService';
 import AppContext from 'contexts/AppContext';
 import Constants from 'utils/Constants';
 import { tokenDecode } from 'utils/AclUtils';
+import { sls } from 'utils/StorageUtils';
 import logo from 'assets/logo.svg';
 import './style.less';
 
@@ -25,10 +33,9 @@ const OneLogin: FC<LoginProps> = ({ onLogin }: LoginProps): ReactElement => {
     if (response.error) {
       setErrorMessages(response.error);
     } else {
-      console.log(response);
-      localStorage.setItem(Constants.storage.TOKEN, response.token);
+      sls.setItem(Constants.storage.TOKEN, response.token);
       const decoded = tokenDecode(response.token);
-      localStorage.setItem(Constants.storage.USER, JSON.stringify(decoded.user));
+      sls.setItem(Constants.storage.USER, JSON.stringify(decoded.user));
       onLogin(true);
     }
   };

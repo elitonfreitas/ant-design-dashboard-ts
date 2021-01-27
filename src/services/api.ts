@@ -1,17 +1,18 @@
 import axios, { AxiosInstance } from 'axios';
+import { sls } from 'utils/StorageUtils';
 import Constants from '../utils/Constants';
 
 const api: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_ROOT,
   headers: {
-    Authorization: localStorage.getItem(Constants.storage.TOKEN),
-    locale: localStorage.getItem(Constants.storage.LANG),
+    Authorization: sls.getItem(Constants.storage.TOKEN),
+    locale: sls.getItem(Constants.storage.LANG),
   },
 });
 
 api.interceptors.request.use(
   function (config) {
-    const token = localStorage.getItem(Constants.storage.TOKEN);
+    const token = sls.getItem(Constants.storage.TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,9 +27,9 @@ api.interceptors.response.use(
   function (response) {
     const message = response && response.data ? response.data.message : '';
     if (message.includes(Constants.message.INVALID_TOKEN)) {
-      localStorage.removeItem(Constants.storage.TOKEN);
-      localStorage.removeItem(Constants.storage.LOGGED);
-      localStorage.removeItem(Constants.storage.LANG);
+      sls.removeItem(Constants.storage.TOKEN);
+      sls.removeItem(Constants.storage.LOGGED);
+      sls.removeItem(Constants.storage.LANG);
     }
     return response;
   },

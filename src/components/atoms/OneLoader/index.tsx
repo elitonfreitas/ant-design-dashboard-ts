@@ -1,5 +1,5 @@
 import { FC, ReactElement, useContext } from 'react';
-import { Spin } from 'antd';
+import Spin from 'antd/es/spin';
 import AppContext from 'contexts/AppContext';
 import './style.less';
 

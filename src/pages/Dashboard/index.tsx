@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { Layout } from 'antd';
+import Layout from 'antd/es/layout';
 import AppContext from 'contexts/AppContext';
 
 const { Content } = Layout;

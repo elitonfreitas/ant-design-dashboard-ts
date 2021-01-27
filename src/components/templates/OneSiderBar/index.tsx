@@ -1,7 +1,6 @@
 import { FC, useContext, useState } from 'react';
-import { Layout } from 'antd';
+import Layout from 'antd/es/layout';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
-
 import OneProfile from 'components/atoms/OneProfile';
 import OneLogo from 'components/atoms/OneLogo';
 import OneMenu from 'components/molecules/OneMenu';

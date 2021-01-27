@@ -1,4 +1,5 @@
 import jwt from 'jwt-decode';
+import { sls } from './StorageUtils';
 import Constants from './Constants';
 
 function tokenDecode(token: string): any {
@@ -14,7 +15,7 @@ function checkACL(resource: string, level = 'r'): boolean {
   if (!JSON.parse(process.env.REACT_APP_ACL || 'false')) {
     return true;
   }
-  const token = localStorage.getItem(Constants.storage.TOKEN);
+  const token = sls.getItem(Constants.storage.TOKEN);
   if (!token) {
     return false;
   }

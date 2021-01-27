@@ -1,6 +1,5 @@
 import { FC, ReactElement } from 'react';
-import { PageHeader } from 'antd';
-import { PageHeaderProps } from 'antd/lib/page-header';
+import PageHeader, { PageHeaderProps } from 'antd/es/page-header';
 import './style.less';
 
 const OnePageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): ReactElement => {

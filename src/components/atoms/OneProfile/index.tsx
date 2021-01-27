@@ -1,7 +1,9 @@
 import { FC, ReactElement, useContext } from 'react';
-import { Avatar, Button } from 'antd';
+import Avatar from 'antd/es/avatar';
+import Button from 'antd/es/button';
 import AppContext from 'contexts/AppContext';
 import Constants from 'utils/Constants';
+import { sls } from 'utils/StorageUtils';
 import './style.less';
 
 interface OneAvatarProps {
@@ -11,15 +13,15 @@ interface OneAvatarProps {
 const OneProfile: FC<OneAvatarProps> = (props: OneAvatarProps): ReactElement => {
   const { changeLogged } = useContext(AppContext);
   const { onClick } = props;
-  const user = JSON.parse(localStorage.getItem(Constants.storage.USER) || '{"name": "", image: "", profiles: []}');
+  const user = JSON.parse(sls.getItem(Constants.storage.USER) || '{"name": "", image: "", profiles: []}');
   const { name, image, profiles } = user;
   const profileName = profiles.join(', ');
 
   const logout = () => {
-    localStorage.removeItem(Constants.storage.USER);
-    localStorage.removeItem(Constants.storage.LOGGED);
-    localStorage.removeItem(Constants.storage.TOKEN);
-    localStorage.removeItem(Constants.storage.LANG);
+    sls.removeItem(Constants.storage.USER);
+    sls.removeItem(Constants.storage.LOGGED);
+    sls.removeItem(Constants.storage.TOKEN);
+    sls.removeItem(Constants.storage.LANG);
     changeLogged(false);
   };
 

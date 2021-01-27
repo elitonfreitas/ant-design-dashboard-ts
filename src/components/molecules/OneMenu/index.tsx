@@ -1,6 +1,6 @@
 import { FC, Key, ReactElement, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Menu } from 'antd';
+import Menu from 'antd/es/menu';
 import { checkACL } from 'utils/AclUtils';
 import AppContext from 'contexts/AppContext';
 import { MenuItem } from '../../../routes/menu';

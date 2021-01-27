@@ -1,5 +1,5 @@
 import { FC, ReactElement } from 'react';
-import { Button } from 'antd';
+import Button from 'antd/es/button';
 import { ButtonProps } from 'antd/lib/button';
 import './style.less';
 

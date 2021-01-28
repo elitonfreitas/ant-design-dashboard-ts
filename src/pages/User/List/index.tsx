@@ -1,9 +1,9 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import Button from 'antd/es/button';
 import Col from 'antd/es/col';
 import Form from 'antd/es/form';
 import Input from 'antd/es/input';
 import Layout from 'antd/es/layout';
+import Popconfirm from 'antd/es/popconfirm';
 import Switch from 'antd/es/switch';
 import Table from 'antd/es/table';
 import Tooltip from 'antd/es/tooltip';
@@ -12,6 +12,9 @@ import EditOutlined from '@ant-design/icons/EditOutlined';
 import SearchOutlined from '@ant-design/icons/SearchOutlined';
 import PlusOutlined from '@ant-design/icons/PlusOutlined';
 import DownloadOutlined from '@ant-design/icons/DownloadOutlined';
+import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
+import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
+import OneButton from 'components/atoms/OneButton';
 import { Profile, User } from 'interfaces';
 import { formatDate } from 'utils/DateUtils';
 import AppContext from 'contexts/AppContext';
@@ -34,6 +37,7 @@ const UserList: FC = (): JSX.Element => {
   const [term, setTerm] = useState('initial');
   const [active, setActive] = useState(true);
   const [reload, setReload] = useState('');
+  const [usersToDelete, setUsersToDelete] = useState<React.Key[]>([]);
   const [form] = Form.useForm();
 
   const getUsers = async () => {
@@ -42,6 +46,15 @@ const UserList: FC = (): JSX.Element => {
     await setUsers(response);
     setLoading(false);
     setTerm('');
+  };
+
+  const deleteUsers = async () => {
+    if (usersToDelete.length) {
+      setLoading(true);
+      await defaultService.delete(Constants.api.USERS, usersToDelete);
+      setUsersToDelete([]);
+      await getUsers();
+    }
   };
 
   const filterUser = (): void => {
@@ -65,8 +78,15 @@ const UserList: FC = (): JSX.Element => {
     }
   };
 
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[]) => {
+      setUsersToDelete(selectedRowKeys);
+    },
+  };
+
   useEffect(() => {
     filterUser();
+    setUsersToDelete([]);
   }, [term, active, loading]);
 
   useEffect(() => {
@@ -96,14 +116,14 @@ const UserList: FC = (): JSX.Element => {
               </Form.Item>
               <Form.Item name="download">
                 <Tooltip title={t('Download .xlsx')} placement="top">
-                  <Button icon={<DownloadOutlined />} type="primary" />
+                  <OneButton icon={<DownloadOutlined />} type="primary" />
                 </Tooltip>
               </Form.Item>
             </Form>
           </Col>
-          {checkACL(Constants.acl.users, Constants.permissions.W) ? (
+          {checkACL(Constants.acl.USERS, Constants.permissions.W) ? (
             <Col span={4} style={{ textAlign: 'right' }}>
-              <Button
+              <OneButton
                 icon={<PlusOutlined />}
                 type="primary"
                 onClick={() => {
@@ -112,7 +132,7 @@ const UserList: FC = (): JSX.Element => {
                 }}
               >
                 {t('New user')}
-              </Button>
+              </OneButton>
             </Col>
           ) : (
             ''
@@ -121,6 +141,20 @@ const UserList: FC = (): JSX.Element => {
       </Content>
 
       <Content className="one-page-user-list">
+        {!!usersToDelete.length && checkACL(Constants.acl.USERS, Constants.permissions.M) && (
+          <Popconfirm
+            title={t('Are you sure to delete these users?')}
+            onConfirm={() => deleteUsers()}
+            okText={t('Yes')}
+            cancelText={t('No')}
+            icon={<ExclamationCircleOutlined />}
+          >
+            <OneButton type="primary" className="one-delete-user" icon={<DeleteOutlined />}>
+              {t('Delete')}
+            </OneButton>
+          </Popconfirm>
+        )}
+
         <Table
           loading={loading}
           dataSource={userList}
@@ -133,6 +167,11 @@ const UserList: FC = (): JSX.Element => {
               `${range[0]} - ${range[1]} ${t('of')} ${total} ${t('items')}`,
             defaultPageSize: 20,
           }}
+          rowSelection={
+            checkACL(Constants.acl.USERS, Constants.permissions.M)
+              ? { type: 'checkbox', selectedRowKeys: usersToDelete, ...rowSelection }
+              : undefined
+          }
         >
           <Column title={t('Name')} dataIndex="name" width={180} />
           <Column title={t('Email')} dataIndex="email" width={180} />
@@ -160,7 +199,7 @@ const UserList: FC = (): JSX.Element => {
             width={90}
             render={(_: string, item: User) => formatDate(item.updatedAt)}
           />
-          {checkACL(Constants.acl.users, Constants.permissions.W) ? (
+          {checkACL(Constants.acl.USERS, Constants.permissions.W) ? (
             <Column
               title={t('Edit')}
               dataIndex={'edit'}
@@ -168,7 +207,7 @@ const UserList: FC = (): JSX.Element => {
               fixed={'right'}
               align={'center'}
               render={(_: string, item: User) => (
-                <Button
+                <OneButton
                   onClick={() => {
                     setCreateVisible(true);
                     setUserEdit(item);
@@ -176,7 +215,7 @@ const UserList: FC = (): JSX.Element => {
                   icon={<EditOutlined />}
                   type="primary"
                   shape="circle"
-                ></Button>
+                ></OneButton>
               )}
             />
           ) : null}

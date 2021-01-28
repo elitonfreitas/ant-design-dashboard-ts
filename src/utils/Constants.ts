@@ -17,7 +17,7 @@ const Constants = {
     INVALID_TOKEN: 'Invalid token',
   },
   acl: {
-    users: 'users',
+    USERS: 'users',
   },
   permissions: {
     R: 'r',

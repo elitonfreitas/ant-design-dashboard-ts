@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios';
+import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import api from './api';
 
 class DefaultService {
@@ -43,9 +43,10 @@ class DefaultService {
     }
   }
 
-  async delete(url: string, errorResponse = {}) {
+  async delete(url: string, data: any = undefined, errorResponse = {}) {
     try {
-      const result = await this.api.delete(url);
+      const config: AxiosRequestConfig | undefined = data ? { ...this.api.defaults, data } : undefined;
+      const result = await this.api.delete(url, config);
       return result.data?.data;
     } catch (error) {
       return errorResponse;

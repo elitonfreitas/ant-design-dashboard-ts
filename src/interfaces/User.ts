@@ -8,10 +8,18 @@ interface Address {
   country: string;
 }
 
+export interface Resource {
+  _id: number;
+  defaultPermission: string;
+  name: string;
+  aclResource: string;
+}
 export interface Profile {
   _id: number;
   name: string;
-  acl: unknown;
+  acl: any;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface User {

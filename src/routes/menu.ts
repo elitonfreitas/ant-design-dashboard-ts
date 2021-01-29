@@ -1,8 +1,10 @@
 import { ElementType } from 'react';
 import UserOutlined from '@ant-design/icons/UserOutlined';
-import ProjectOutlined from '@ant-design/icons/ProjectOutlined';
+import ProfileOutlined from '@ant-design/icons/ProfileOutlined';
+import DashboardOutlined from '@ant-design/icons/DashboardOutlined';
 import Dashboard from '../pages/Dashboard';
 import UserList from 'pages/User/List';
+import ProfileList from 'pages/Profile/List';
 
 export interface MenuItem {
   path: string;
@@ -23,16 +25,25 @@ const menus: MenuItem[] = [
     title: 'Dashboard',
     component: Dashboard,
     exact: true,
-    icon: UserOutlined,
+    icon: DashboardOutlined,
   },
   {
     path: '/users',
     title: 'Users',
-    subTitle: 'Texto de teste para subtílulo da página',
-    icon: ProjectOutlined,
+    subTitle: 'Manager system users',
+    icon: UserOutlined,
     component: UserList,
     exact: true,
     aclResource: 'users',
+  },
+  {
+    path: '/profiles',
+    title: 'Profile',
+    subTitle: 'Manager user profiles and ACL configurations',
+    icon: ProfileOutlined,
+    component: ProfileList,
+    exact: true,
+    aclResource: 'profiles',
   },
   // {
   //   path: '/projects',

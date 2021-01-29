@@ -12,17 +12,20 @@ const Constants = {
     AUTH: 'auth',
     USERS: 'users',
     PROFILES: 'profiles',
+    RESOURCES: 'resources',
   },
   message: {
     INVALID_TOKEN: 'Invalid token',
   },
   acl: {
     USERS: 'users',
+    PROFILES: 'profiles',
   },
   permissions: {
     R: 'r',
     W: 'w',
     M: 'm',
+    NONE: 'n',
   },
 };
 

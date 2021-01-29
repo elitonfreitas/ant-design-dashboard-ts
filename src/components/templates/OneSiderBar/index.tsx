@@ -1,25 +1,21 @@
 import { FC, useContext, useState } from 'react';
 import Layout from 'antd/es/layout';
-import MenuUnfoldOutlined from '@ant-design/icons/MenuUnfoldOutlined';
-import MenuFoldOutlined from '@ant-design/icons/MenuFoldOutlined';
-import OneProfile from 'components/atoms/OneProfile';
+
 import OneLogo from 'components/atoms/OneLogo';
 import OneMenu from 'components/molecules/OneMenu';
-import OneButton from 'components/atoms/OneButton';
-import OneThemeConfig from 'components/organisms/OneThemeConfig';
 import AppContext from 'contexts/AppContext';
 import Constants from 'utils/Constants';
+import OneHeader from 'components/molecules/OneHeader';
 import Routes from '../../../routes';
 import menus from '../../../routes/menu';
 import logo from 'assets/logo.svg';
 import './style.less';
 
-const { Header, Sider, Footer } = Layout;
+const { Sider, Footer } = Layout;
 
 const OneSiderBar: FC = (): JSX.Element => {
   const { theme } = useContext(AppContext);
   const [collapsed, setCollapsed] = useState(false);
-  const [collapsedRight, setCollapsedRight] = useState(true);
 
   function toggle() {
     setCollapsed(!collapsed);
@@ -45,24 +41,7 @@ const OneSiderBar: FC = (): JSX.Element => {
         <OneMenu theme={theme} menus={menus} />
       </Sider>
       <Layout className="one-bar-layout">
-        <Header
-          className="one-header-layout"
-          style={{
-            position: 'fixed',
-            zIndex: 1000,
-            width: '100vw',
-            padding: 0,
-          }}
-        >
-          <OneButton
-            type="link"
-            className={collapsed ? 'trigger collapsed' : 'trigger'}
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={toggle}
-          />
-
-          <OneProfile onClick={() => setCollapsedRight(!collapsedRight)} />
-        </Header>
+        <OneHeader collapsed={collapsed} toggle={toggle} />
         <Routes collapsed={collapsed} menus={menus} />
         <Footer
           className="one-footer-layout"
@@ -71,10 +50,9 @@ const OneSiderBar: FC = (): JSX.Element => {
             marginLeft: collapsed ? 80 : 250,
           }}
         >
-          Footer
+          {process.env.REACT_APP_NAME} @ 2021
         </Footer>
       </Layout>
-      <OneThemeConfig collapsed={collapsedRight} />
     </Layout>
   );
 };

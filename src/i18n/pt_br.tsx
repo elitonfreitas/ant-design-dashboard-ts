@@ -6,6 +6,7 @@ export default {
     Select: 'Selecione',
     Search: 'Buscar',
     Active: 'Ativo',
+    Email: 'E-mail',
     Yes: 'Sim',
     No: 'Não',
     All: 'Todos',

@@ -18,10 +18,7 @@ const OneProfile: FC<OneAvatarProps> = (props: OneAvatarProps): ReactElement => 
   const profileName = profiles.join(', ');
 
   const logout = () => {
-    sls.removeItem(Constants.storage.USER);
-    sls.removeItem(Constants.storage.LOGGED);
-    sls.removeItem(Constants.storage.TOKEN);
-    sls.removeItem(Constants.storage.LANG);
+    sls.clear();
     changeLogged(false);
   };
 

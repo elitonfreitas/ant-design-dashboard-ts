@@ -3,12 +3,9 @@ import { sls } from './StorageUtils';
 import Constants from './Constants';
 
 function tokenDecode(token: string): any {
-  let decoded: any = {};
   try {
-    decoded = jwt(token);
+    return jwt(token);
   } catch (error) {}
-
-  return decoded;
 }
 
 function checkACL(resource: string, level = 'r'): boolean {
@@ -22,7 +19,7 @@ function checkACL(resource: string, level = 'r'): boolean {
 
   let decoded: any = {};
   try {
-    decoded = jwt(token);
+    decoded = tokenDecode(token);
   } catch (error) {}
 
   const permissions = decoded.acl;

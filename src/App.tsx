@@ -24,7 +24,9 @@ const App: FC = () => {
 
   function changeLogin(_logged: boolean) {
     setLogged(_logged);
-    sls.setItem(Constants.storage.LOGGED, `${_logged}`);
+    if (_logged) {
+      sls.setItem(Constants.storage.LOGGED, `${_logged}`);
+    }
   }
 
   async function changeLang(_lang: Lang) {

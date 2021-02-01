@@ -16,6 +16,8 @@ export default {
     Add: 'Adicionar',
     Save: 'Salvar',
     Reset: 'Limpar',
+    Clean: 'Limpar',
+    Filter: 'Filtrar',
     'Created At': 'Criado em',
     'Updated At': 'Atualizado em',
 
@@ -36,6 +38,8 @@ export default {
     // PROFILE
     Users: 'Usuários',
     'New user': 'Novo usuário',
+    'Filter by name': 'Filtrar por nome',
+    'Filter by email': 'Filtrar por e-mail',
     'Manager system users': 'Gerenciar usuários do sistema',
     'Search user': 'Buscar usuário',
     'Confirm password': 'Confirmar senha',
@@ -50,6 +54,7 @@ export default {
     'New profile': 'Novo perfil',
     'Manager user profiles and ACL configurations': 'Gerenciar perfis de usuários e configurações de ACL',
     'Type the new profile name': 'Digite o nome do novo perfil',
+    'Are you sure to delete these users?': 'Você tem certeza que deseja deletar esses usuários?',
 
     // LOGIN
     Welcome: 'Bem-vindo',

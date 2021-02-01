@@ -1,22 +1,21 @@
 import { FC, useContext, useEffect, useState } from 'react';
+import Button from 'antd/es/button';
 import Col from 'antd/es/col';
-import Form from 'antd/es/form';
 import Input from 'antd/es/input';
+import Space from 'antd/es/space';
 import Layout from 'antd/es/layout';
 import Popconfirm from 'antd/es/popconfirm';
-import Switch from 'antd/es/switch';
 import Table from 'antd/es/table';
-import Tooltip from 'antd/es/tooltip';
 import Row from 'antd/es/row';
 import EditOutlined from '@ant-design/icons/EditOutlined';
 import SearchOutlined from '@ant-design/icons/SearchOutlined';
 import PlusOutlined from '@ant-design/icons/PlusOutlined';
-import DownloadOutlined from '@ant-design/icons/DownloadOutlined';
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
+import ClearOutlined from '@ant-design/icons/ClearOutlined';
 import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
 import OneButton from 'components/atoms/OneButton';
 import { Profile, User } from 'interfaces';
-import { formatDate } from 'utils/DateUtils';
+import { formatDate, filterToString, FilterItem } from 'utils/DateUtils';
 import AppContext from 'contexts/AppContext';
 import UserCreate from 'pages/User/Create';
 import defaultService from 'services/defaultService';
@@ -27,25 +26,53 @@ import './style.less';
 const { Content } = Layout;
 const { Column } = Table;
 
+interface Pager {
+  current: number;
+  limit?: number;
+  total?: number;
+  sortBy?: string;
+}
+
 const UserList: FC = (): JSX.Element => {
   const { t } = useContext(AppContext);
   const [users, setUsers] = useState<User[]>([]);
   const [userEdit, setUserEdit] = useState<User>();
-  const [userList, setUserList] = useState<User[]>([]);
   const [createVisible, setCreateVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [term, setTerm] = useState('initial');
-  const [active, setActive] = useState(true);
+  const [filters, setFilters] = useState<FilterItem[]>([]);
   const [reload, setReload] = useState('');
+  const [pager, setPager] = useState<Pager>({ current: 1, limit: 20, total: 0, sortBy: '' });
   const [usersToDelete, setUsersToDelete] = useState<React.Key[]>([]);
-  const [form] = Form.useForm();
 
-  const getUsers = async () => {
+  const getUsers = async (page: Pager = pager, filter: FilterItem[] = filters) => {
     setLoading(true);
-    const response = await defaultService.get(Constants.api.USERS, []);
-    await setUsers(response);
+    const pagerInfo = [`current=${page.current}`, `limit=${page.limit || pager.limit}`];
+    if (page.sortBy) pagerInfo.push(`sortBy=${page.sortBy}`);
+    if (filter && filter.length) pagerInfo.push(`filter=${filterToString(filter)}`);
+
+    const response = await defaultService.get(`${Constants.api.USERS}?${pagerInfo.join('&')}`, []);
+
+    await setUsers(response?.list);
+    setPager({ ...response?.pager, sortBy: page.sortBy });
     setLoading(false);
-    setTerm('');
+  };
+
+  const onChangePage = (page, _filters, sorter) => {
+    const sortBy = sorter.order ? `${sorter.field}|${sorter.order === 'ascend' ? '-1' : '1'}` : '';
+
+    const _pager = {
+      ...pager,
+      current: page.current,
+      total: page.total,
+      limit: page.pageSize,
+      sortBy,
+    };
+
+    if (_filters['active']) {
+      return searchHandler('active', _filters['active'], 'b', '', _pager);
+    } else {
+      return searchHandler('active', [], 'b', '', _pager);
+    }
   };
 
   const deleteUsers = async () => {
@@ -57,24 +84,30 @@ const UserList: FC = (): JSX.Element => {
     }
   };
 
-  const filterUser = (): void => {
-    const filteredUsers: User[] = users
-      .filter((u: User) => !term || u?.name.toLocaleLowerCase().includes(term.toLocaleLowerCase()))
-      .filter((u: User) => u?.active === active);
+  const searchHandler = (key, values, type = '', options = '', page: Pager = { current: 1 }) => {
+    const otherFilters = filters.filter((f) => f.key !== key);
+    let _filters: any = [];
 
-    setUserList(filteredUsers);
+    if (key) {
+      if (values.length) {
+        _filters = [...otherFilters, { key, values, type, options }];
+      } else {
+        _filters = otherFilters;
+      }
+    }
+
+    setFilters(_filters);
+    getUsers(page, _filters);
   };
 
-  const callFilter = () => {
-    const values = form.getFieldsValue();
-    setActive(values['activeUser']);
-    setTerm(values['term']);
+  const getFilterValues = (key) => {
+    const { values } = filters.find((f) => f.key === key) || {};
+    return values;
   };
 
   const reloadUsers = async (_reload: boolean) => {
     if (_reload) {
       setReload(`${Math.random()}`);
-      form.resetFields();
     }
   };
 
@@ -85,44 +118,61 @@ const UserList: FC = (): JSX.Element => {
   };
 
   useEffect(() => {
-    filterUser();
     setUsersToDelete([]);
-  }, [term, active, loading]);
+  }, [loading]);
 
   useEffect(() => {
     getUsers();
   }, [, reload]);
 
+  const columnWithSearch = (title, key, sorter, type = '', options = '') => (
+    <Column
+      title={t(title)}
+      dataIndex={key}
+      width={180}
+      sorter={sorter}
+      filteredValue={getFilterValues(key)}
+      filterIcon={() => <SearchOutlined className={getFilterValues(key) ? 'search-icon active' : 'search-icon'} />}
+      filterDropdown={({ setSelectedKeys, selectedKeys }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder={t(`Filter by ${key}`)}
+            value={getFilterValues(key) || selectedKeys.length ? selectedKeys[0] : ''}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => searchHandler(key, selectedKeys, type, options)}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => searchHandler(key, selectedKeys, type, options)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              {t('Filter')}
+            </Button>
+            <Button
+              onClick={() => {
+                searchHandler(key, []);
+              }}
+              size="small"
+              style={{ width: 90 }}
+            >
+              {t('Clean')}
+            </Button>
+          </Space>
+        </div>
+      )}
+    />
+  );
+
   return (
     <>
       <Content>
         <Row>
-          <Col span={20}>
-            <Form
-              layout="inline"
-              form={form}
-              initialValues={{ term: '', activeUser: active }}
-              onFieldsChange={() => callFilter()}
-            >
-              <Form.Item style={{ width: 250 }} name="term">
-                <Input
-                  allowClear
-                  suffix={<SearchOutlined style={{ color: '@primary-color' }} />}
-                  placeholder={t('Search user')}
-                />
-              </Form.Item>
-              <Form.Item label={t('Active')} name="activeUser" valuePropName="checked">
-                <Switch checkedChildren={t('Yes')} unCheckedChildren={t('No')} />
-              </Form.Item>
-              <Form.Item name="download">
-                <Tooltip title={t('Download .xlsx')} placement="top">
-                  <OneButton icon={<DownloadOutlined />} type="primary" />
-                </Tooltip>
-              </Form.Item>
-            </Form>
-          </Col>
           {checkACL(Constants.acl.USERS, Constants.permissions.W) ? (
-            <Col span={4} style={{ textAlign: 'right' }}>
+            <Col span={24} style={{ textAlign: 'right' }}>
               <OneButton
                 icon={<PlusOutlined />}
                 type="primary"
@@ -141,31 +191,43 @@ const UserList: FC = (): JSX.Element => {
       </Content>
 
       <Content className="one-page-user-list">
-        {!!usersToDelete.length && checkACL(Constants.acl.USERS, Constants.permissions.M) && (
-          <Popconfirm
-            title={t('Are you sure to delete these users?')}
-            onConfirm={() => deleteUsers()}
-            okText={t('Yes')}
-            cancelText={t('No')}
-            icon={<ExclamationCircleOutlined />}
-          >
-            <OneButton type="primary" className="one-delete-user" icon={<DeleteOutlined />}>
-              {t('Delete')}
+        <div className={pager.total ? 'one-table-actions' : 'one-table-actions relative'}>
+          {!!usersToDelete.length && checkACL(Constants.acl.USERS, Constants.permissions.M) && (
+            <Popconfirm
+              title={t('Are you sure to delete these users?')}
+              onConfirm={() => deleteUsers()}
+              okText={t('Yes')}
+              cancelText={t('No')}
+              icon={<ExclamationCircleOutlined />}
+            >
+              <OneButton type="primary" className="one-delete-user" icon={<DeleteOutlined />}>
+                {t('Delete')}
+              </OneButton>
+            </Popconfirm>
+          )}
+          {filters.length ? (
+            <OneButton type="default" icon={<ClearOutlined />} onClick={() => searchHandler('', [])}>
+              {t('Clean filters')}
             </OneButton>
-          </Popconfirm>
-        )}
+          ) : (
+            ''
+          )}
+        </div>
 
         <Table
           loading={loading}
-          dataSource={userList}
+          dataSource={users}
           scroll={{ x: 1200 }}
           rowKey={'_id'}
+          onChange={onChangePage}
           pagination={{
+            responsive: true,
             position: ['topRight', 'bottomRight'],
-            total: userList.length,
             showTotal: (total: number, range: number[]) =>
               `${range[0]} - ${range[1]} ${t('of')} ${total} ${t('items')}`,
-            defaultPageSize: 20,
+            defaultPageSize: pager.limit,
+            total: pager.total,
+            current: pager.current,
           }}
           rowSelection={
             checkACL(Constants.acl.USERS, Constants.permissions.M)
@@ -173,8 +235,8 @@ const UserList: FC = (): JSX.Element => {
               : undefined
           }
         >
-          <Column title={t('Name')} dataIndex="name" width={180} />
-          <Column title={t('Email')} dataIndex="email" width={180} />
+          {columnWithSearch('Name', 'name', true, 'r', 'i')}
+          {columnWithSearch('Email', 'email', true, 'r', 'i')}
           <Column
             title={t('Profiles')}
             dataIndex="profiles"
@@ -185,18 +247,26 @@ const UserList: FC = (): JSX.Element => {
             title={t('Active')}
             dataIndex="active"
             width={90}
+            filteredValue={getFilterValues('active')}
+            filterMultiple={false}
+            filters={[
+              { text: t('Yes'), value: true },
+              { text: t('No'), value: false },
+            ]}
             render={(_: string, item: User) => (item.active ? t('Yes') : t('No'))}
           />
           <Column
             title={t('Created At')}
             dataIndex="createdAt"
             width={90}
+            sorter={true}
             render={(_: string, item: User) => formatDate(item.createdAt)}
           />
           <Column
             title={t('Updated At')}
             dataIndex="updatedAt"
             width={90}
+            sorter={true}
             render={(_: string, item: User) => formatDate(item.updatedAt)}
           />
           {checkACL(Constants.acl.USERS, Constants.permissions.W) ? (

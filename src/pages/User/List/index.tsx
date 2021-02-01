@@ -15,7 +15,8 @@ import ClearOutlined from '@ant-design/icons/ClearOutlined';
 import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
 import OneButton from 'components/atoms/OneButton';
 import { Profile, User } from 'interfaces';
-import { formatDate, filterToString, FilterItem } from 'utils/DateUtils';
+import { formatDate } from 'utils/DateUtils';
+import { queryBuilder, FilterItem, Pager } from 'utils/ApiUtils';
 import AppContext from 'contexts/AppContext';
 import UserCreate from 'pages/User/Create';
 import defaultService from 'services/defaultService';
@@ -26,31 +27,26 @@ import './style.less';
 const { Content } = Layout;
 const { Column } = Table;
 
-interface Pager {
-  current: number;
-  limit?: number;
-  total?: number;
-  sortBy?: string;
-}
-
 const UserList: FC = (): JSX.Element => {
-  const { t } = useContext(AppContext);
+  const { t, options } = useContext(AppContext);
   const [users, setUsers] = useState<User[]>([]);
   const [userEdit, setUserEdit] = useState<User>();
   const [createVisible, setCreateVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<FilterItem[]>([]);
   const [reload, setReload] = useState('');
-  const [pager, setPager] = useState<Pager>({ current: 1, limit: 20, total: 0, sortBy: '' });
+  const [pager, setPager] = useState<Pager>({
+    current: 1,
+    limit: Number(options?.pagerLimit || process.env.REACT_APP_PAGER_SIZE || 20),
+    total: 0,
+    sortBy: '',
+  });
   const [usersToDelete, setUsersToDelete] = useState<React.Key[]>([]);
 
   const getUsers = async (page: Pager = pager, filter: FilterItem[] = filters) => {
     setLoading(true);
-    const pagerInfo = [`current=${page.current}`, `limit=${page.limit || pager.limit}`];
-    if (page.sortBy) pagerInfo.push(`sortBy=${page.sortBy}`);
-    if (filter && filter.length) pagerInfo.push(`filter=${filterToString(filter)}`);
-
-    const response = await defaultService.get(`${Constants.api.USERS}?${pagerInfo.join('&')}`, []);
+    const params = queryBuilder(pager, filter);
+    const response = await defaultService.get(`${Constants.api.USERS}?${params}`, []);
 
     await setUsers(response?.list);
     setPager({ ...response?.pager, sortBy: page.sortBy });

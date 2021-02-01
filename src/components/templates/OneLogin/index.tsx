@@ -11,6 +11,7 @@ import defaultService from 'services/defaultService';
 import AppContext from 'contexts/AppContext';
 import Constants from 'utils/Constants';
 import { tokenDecode } from 'utils/AclUtils';
+import { User } from 'interfaces';
 import { sls } from 'utils/StorageUtils';
 import logo from 'assets/logo.svg';
 import './style.less';
@@ -20,7 +21,7 @@ interface Login {
   password: string;
 }
 interface LoginProps {
-  onLogin(logged: boolean): void;
+  onLogin(user?: User): void;
 }
 
 const OneLogin: FC<LoginProps> = ({ onLogin }: LoginProps): ReactElement => {
@@ -36,7 +37,7 @@ const OneLogin: FC<LoginProps> = ({ onLogin }: LoginProps): ReactElement => {
       sls.setItem(Constants.storage.TOKEN, response.token);
       const decoded = tokenDecode(response.token);
       sls.setItem(Constants.storage.USER, JSON.stringify(decoded.user));
-      onLogin(true);
+      onLogin(decoded.user);
     }
   };
 

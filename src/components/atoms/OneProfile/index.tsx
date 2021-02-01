@@ -19,7 +19,7 @@ const OneProfile: FC<OneAvatarProps> = (props: OneAvatarProps): ReactElement => 
 
   const logout = () => {
     sls.clear();
-    changeLogged(false);
+    changeLogged();
   };
 
   return (

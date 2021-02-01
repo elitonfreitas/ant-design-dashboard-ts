@@ -33,6 +33,7 @@ export default {
     Language: 'Linguagem',
     Portuguese: 'Português',
     English: 'Inglês',
+    'Default pager size': 'Tamanho padrão das páginas',
 
     // PAGES AND MENU
     // PROFILE

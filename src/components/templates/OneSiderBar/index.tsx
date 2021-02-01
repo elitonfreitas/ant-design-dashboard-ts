@@ -14,7 +14,7 @@ import './style.less';
 const { Sider, Footer } = Layout;
 
 const OneSiderBar: FC = (): JSX.Element => {
-  const { theme } = useContext(AppContext);
+  const { options } = useContext(AppContext);
   const [collapsed, setCollapsed] = useState(false);
 
   function toggle() {
@@ -22,10 +22,10 @@ const OneSiderBar: FC = (): JSX.Element => {
   }
 
   return (
-    <Layout className={`one-layout ${theme}`}>
+    <Layout className={`one-layout ${options.theme}`}>
       <Sider
         className="one-sider-bar-left"
-        theme={theme}
+        theme={options.theme}
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -38,7 +38,7 @@ const OneSiderBar: FC = (): JSX.Element => {
         }}
       >
         <OneLogo appName={Constants.app.appName} logo={logo} />
-        <OneMenu theme={theme} menus={menus} />
+        <OneMenu theme={options.theme} menus={menus} />
       </Sider>
       <Layout className="one-bar-layout">
         <OneHeader collapsed={collapsed} toggle={toggle} />

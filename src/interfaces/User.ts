@@ -1,11 +1,13 @@
-interface Address {
-  address: string;
-  number: string;
-  postCode: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  country: string;
+import { Lang } from 'i18n';
+
+export type AppTheme = 'light' | 'dark' | undefined;
+export type ComponentSize = 'large' | 'middle' | 'small' | undefined;
+
+export interface ThemeOptions {
+  theme: AppTheme;
+  componentSize: ComponentSize;
+  lang: Lang;
+  pagerLimit?: number;
 }
 
 export interface Resource {
@@ -28,7 +30,7 @@ export interface User {
   email: string;
   active: boolean;
   profiles: any[];
-  addresses?: Address[];
+  options?: ThemeOptions;
   createdAt?: Date;
   updatedAt?: Date;
 }

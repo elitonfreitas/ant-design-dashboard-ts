@@ -23,7 +23,7 @@ class DefaultService {
       return result.data?.data;
     } catch (error) {
       const result = {
-        error: error.response && error.response.data ? error.response.data?.message : error.message,
+        error: error.response && error.response.data ? error.response.data?.message : [error.message],
         data: error.response && error.response.data ? error.response.data?.data : errorResponse,
       };
       return result;
@@ -36,7 +36,7 @@ class DefaultService {
       return result.data?.data;
     } catch (error) {
       const result = {
-        error: error.response && error.response.data ? error.response.data?.message : error.message,
+        error: error.response && error.response.data ? error.response.data?.message : [error.message],
         data: error.response && error.response.data ? error.response.data?.data : errorResponse,
       };
       return result;

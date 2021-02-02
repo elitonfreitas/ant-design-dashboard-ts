@@ -27,7 +27,7 @@ import './style.less';
 const { Content } = Layout;
 const { Column } = Table;
 
-const ProfileList: FC = (): JSX.Element => {
+const ProfileManager: FC = (): JSX.Element => {
   const { t } = useContext(AppContext);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(false);
@@ -292,4 +292,4 @@ const ProfileList: FC = (): JSX.Element => {
   );
 };
 
-export default ProfileList;
+export default ProfileManager;

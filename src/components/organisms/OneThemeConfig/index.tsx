@@ -25,7 +25,7 @@ const OneThemeConfig: FC<OneThemeConfigProps> = ({ visible, toggleVisible }: One
       closable={true}
       onClose={() => toggleVisible(visible)}
       visible={visible}
-      width={320}
+      width={350}
       style={{
         zIndex: 1003,
       }}
@@ -56,7 +56,7 @@ const OneThemeConfig: FC<OneThemeConfigProps> = ({ visible, toggleVisible }: One
             <Option value="en">{t('English')}</Option>
           </Select>
         </Form.Item>
-        <Form.Item label={t('Default pager size')}>
+        <Form.Item label={t('Default page items number')}>
           <Select
             onSelect={(value: number) => changeOptions({ ...options, pagerLimit: value })}
             defaultValue={options.pagerLimit || 20}

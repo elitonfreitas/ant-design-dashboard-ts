@@ -16,8 +16,10 @@ export default {
     Add: 'Adicionar',
     Save: 'Salvar',
     Reset: 'Limpar',
+    Delete: 'Deletar',
     Clean: 'Limpar',
     Filter: 'Filtrar',
+    'Clean filters': 'Limpar filtros',
     'Created At': 'Criado em',
     'Updated At': 'Atualizado em',
 
@@ -33,7 +35,7 @@ export default {
     Language: 'Linguagem',
     Portuguese: 'Português',
     English: 'Inglês',
-    'Default pager size': 'Tamanho padrão das páginas',
+    'Default page items number': 'Número padrão de itens por página',
 
     // PAGES AND MENU
     // PROFILE

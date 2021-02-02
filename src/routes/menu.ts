@@ -4,7 +4,7 @@ import ProfileOutlined from '@ant-design/icons/ProfileOutlined';
 import DashboardOutlined from '@ant-design/icons/DashboardOutlined';
 import Dashboard from '../pages/Dashboard';
 import UserList from 'pages/User/List';
-import ProfileList from 'pages/Profile/List';
+import ProfileManager from 'pages/Profile/Manager';
 
 export interface MenuItem {
   path: string;
@@ -41,7 +41,7 @@ const menus: MenuItem[] = [
     title: 'Profile',
     subTitle: 'Manager user profiles and ACL configurations',
     icon: ProfileOutlined,
-    component: ProfileList,
+    component: ProfileManager,
     exact: true,
     aclResource: 'profiles',
   },

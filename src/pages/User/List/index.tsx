@@ -45,30 +45,19 @@ const UserList: FC = (): JSX.Element => {
 
   const getUsers = async (page: Pager = pager, filter: FilterItem[] = filters) => {
     setLoading(true);
-    const params = queryBuilder(pager, filter);
-    const response = await defaultService.get(`${Constants.api.USERS}?${params}`, []);
+    const params = queryBuilder(page, filter);
+    const response = await defaultService.get(`${Constants.api.USERS}?${params}`, { list: [], pager: [] });
 
     await setUsers(response?.list);
     setPager({ ...response?.pager, sortBy: page.sortBy });
     setLoading(false);
   };
 
-  const onChangePage = (page, _filters, sorter) => {
+  const onChangePage = (page, filters, sorter) => {
     const sortBy = sorter.order ? `${sorter.field}|${sorter.order === 'ascend' ? '-1' : '1'}` : '';
+    const _pager = { ...pager, current: page.current, total: page.total, limit: page.pageSize, sortBy };
 
-    const _pager = {
-      ...pager,
-      current: page.current,
-      total: page.total,
-      limit: page.pageSize,
-      sortBy,
-    };
-
-    if (_filters['active']) {
-      return searchHandler('active', _filters['active'], 'b', '', _pager);
-    } else {
-      return searchHandler('active', [], 'b', '', _pager);
-    }
+    return searchHandler('active', filters['active'] || [], 'b', '', _pager);
   };
 
   const deleteUsers = async () => {
@@ -121,47 +110,61 @@ const UserList: FC = (): JSX.Element => {
     getUsers();
   }, [, reload]);
 
-  const columnWithSearch = (title, key, sorter, type = '', options = '') => (
-    <Column
-      title={t(title)}
-      dataIndex={key}
-      width={180}
-      sorter={sorter}
-      filteredValue={getFilterValues(key)}
-      filterIcon={() => <SearchOutlined className={getFilterValues(key) ? 'search-icon active' : 'search-icon'} />}
-      filterDropdown={({ setSelectedKeys, selectedKeys }) => (
-        <div style={{ padding: 8 }}>
-          <Input
-            placeholder={t(`Filter by ${key}`)}
-            value={getFilterValues(key) || selectedKeys.length ? selectedKeys[0] : ''}
-            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-            onPressEnter={() => searchHandler(key, selectedKeys, type, options)}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
-          <Space>
-            <Button
-              type="primary"
-              onClick={() => searchHandler(key, selectedKeys, type, options)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90 }}
-            >
-              {t('Filter')}
-            </Button>
-            <Button
-              onClick={() => {
-                searchHandler(key, []);
-              }}
-              size="small"
-              style={{ width: 90 }}
-            >
-              {t('Clean')}
-            </Button>
-          </Space>
-        </div>
-      )}
-    />
-  );
+  const columnWithSearch = (title, key, sorter, type = '', options = '') => {
+    const values = getFilterValues(key) || [];
+
+    return (
+      <Column
+        title={t(title)}
+        dataIndex={key}
+        width={180}
+        sorter={sorter}
+        filteredValue={values}
+        filterIcon={() => <SearchOutlined className={values[0] ? 'search-icon active' : 'search-icon'} />}
+        onFilterDropdownVisibleChange={(visible) => {
+          if (visible) {
+            setTimeout(() => {
+              const input = document.getElementById(`input-${key}`);
+              if (input) input.focus();
+            }, 200);
+          }
+        }}
+        filterDropdown={({ setSelectedKeys, selectedKeys }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              id={`input-${key}`}
+              placeholder={t(`Filter by ${key}`)}
+              value={values || selectedKeys.length ? selectedKeys[0] : ''}
+              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onPressEnter={() => searchHandler(key, selectedKeys, type, options)}
+              style={{ width: 230, marginBottom: 8, display: 'block' }}
+              autoComplete={'off'}
+            />
+            <Space style={{ display: 'block', overflow: 'hidden' }}>
+              <Button
+                onClick={() => {
+                  searchHandler(key, []);
+                }}
+                size="small"
+                style={{ width: 90, float: 'left' }}
+              >
+                {t('Clean')}
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => searchHandler(key, selectedKeys, type, options)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90, float: 'right' }}
+              >
+                {t('Filter')}
+              </Button>
+            </Space>
+          </div>
+        )}
+      />
+    );
+  };
 
   return (
     <>

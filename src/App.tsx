@@ -11,6 +11,7 @@ import { sls } from 'utils/StorageUtils';
 import i18n, { antLang } from './i18n';
 import Constants from 'utils/Constants';
 import 'themes/default.less';
+import 'themes/dark.less';
 
 const App: FC = () => {
   const [user, setUser] = useState(JSON.parse(sls.getItem(Constants.storage.USER)));

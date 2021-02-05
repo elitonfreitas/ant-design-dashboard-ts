@@ -46,7 +46,7 @@ const UserList: FC = (): JSX.Element => {
   const getUsers = async (page: Pager = pager, filter: FilterItem[] = filters) => {
     setLoading(true);
     const params = queryBuilder(page, filter);
-    const response = await defaultService.get(`${Constants.api.USERS}?${params}`, { list: [], pager: [] });
+    const response = await defaultService.get(`${Constants.api.USERS}/?${params}`, { list: [], pager: [] });
 
     await setUsers(response?.list);
     setPager({ ...response?.pager, sortBy: page.sortBy });
